@@ -1,0 +1,26 @@
+server:
+  port: 8081
+spring:
+  datasource:
+    url: jdbc:mysql://localhost:5432/cardapio?createDatabaseIfNotExist=true&serverTimeZone=UTC
+    username: cardapio
+    password: cardapio
+    hikari:
+      maximum-pool-size: 10
+      minimum-idle: 10
+      idle-timeout: 10000
+  jpa:
+    #    generate-ddl: true
+    #    hibernate:
+    #      ddl-auto: create
+    properties:
+      javax:
+        persistence:
+          schema-generation:
+            scripts:
+    #              action: create
+    #              create-target: src/main/resources/ddl.sql
+    show-sql: true
+    open-in-view: false
+  flyway:
+    locations: classpath:db/migration,classpath:db/testdata

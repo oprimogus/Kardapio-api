@@ -1,0 +1,19 @@
+services:
+  postgres:
+    image: 'postgres'
+    restart: always
+    environment:
+      - 'POSTGRES_DB=cardapio'
+      - 'POSTGRES_PASSWORD=cardapio'
+      - 'POSTGRES_USER=cardapio'
+    ports:
+      - 5432:5432
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+  adminer:
+    image: adminer
+    restart: always
+    ports:
+      - 8080:8080
+volumes:
+  postgres_data:
