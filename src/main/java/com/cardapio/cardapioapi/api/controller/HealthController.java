@@ -9,6 +9,6 @@ import org.springframework.web.bind.annotation.RestController;
 public class HealthController {
     @GetMapping("/ping")
     public String health () {
-        return "pong - Teste de PR";
+        return "pong - qualquer coisa3";
     }
 }
