@@ -8,11 +8,11 @@
 		<version>3.1.1</version>
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
-	<groupId>com.cardapio</groupId>
-	<artifactId>cardapio-api</artifactId>
+	<groupId>com.kardapio</groupId>
+	<artifactId>kardapio-api</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
-	<name>cardapio-api</name>
-	<description>cardapio-api</description>
+	<name>kardapio-api</name>
+	<description>kardapio-api</description>
 	<properties>
 		<java.version>17</java.version>
 	</properties>
@@ -25,7 +25,6 @@
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-web</artifactId>
 		</dependency>
-
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-devtools</artifactId>
