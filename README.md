@@ -3,6 +3,10 @@
 
 ## TO-DO:
 - Melhorar este README.md
+- Criar CRUD's baseado no atual modelo relacional disponível em: https://dbdiagram.io/d/64b3e96102bd1c4a5e26782e
+![Banner](src/main/resources/assets/database-scheme.svg)
+- Criar front-end ou mobile primeiro? 
+- Definir UI/UX
 
 ## Sobre o projeto
 - Consiste numa API para servir a aplicação Kardápio
