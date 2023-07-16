@@ -1,13 +1,13 @@
-package com.cardapio.cardapioapi;
+package com.kardapio.kardapioapi;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication
-public class CardapioApiApplication {
+public class KardapioApiApplication {
 
 	public static void main(String[] args) {
-		SpringApplication.run(CardapioApiApplication.class, args);
+		SpringApplication.run(KardapioApiApplication.class, args);
 	}
 
 }

@@ -2,9 +2,9 @@ server:
   port: 8081
 spring:
   datasource:
-    url: jdbc:mysql://localhost:5432/cardapio?createDatabaseIfNotExist=true&serverTimeZone=UTC
-    username: cardapio
-    password: cardapio
+    url: jdbc:postgresql://localhost:5432/kardapio?createDatabaseIfNotExist=true&serverTimeZone=UTC
+    username: kardapio
+    password: kardapio
     hikari:
       maximum-pool-size: 10
       minimum-idle: 10
