@@ -1,10 +1,11 @@
-# Cardapio-API
+# Kardápio-API
+![Banner](src/main/resources/assets/banner.svg)
 
 ## TO-DO:
 - Melhorar este README.md
 
 ## Sobre o projeto
-- Consiste numa API para servir a aplicação Cardápio
+- Consiste numa API para servir a aplicação Kardápio
 - CRUD's básicos, autenticação e regras de negócio
 
 ## Como rodar o projeto
