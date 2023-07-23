@@ -21,7 +21,7 @@ Quais tipos de alterações o seu código introduz ao projeto? Coloque um `x` em
 - [ ] Bug fix (non-breaking change which fixes an issue)
 - [ ] Nova feature (non-breaking change which adds functionality)
 - [ ] Breaking change (fix ou feature que pode alterar alguma funcionalidade)
-- [ ] Documentação (inclui atualizações na documentação de end user e/ou technical)
+- [ ] Documentação (inclui atualizações na documentação de end userModel e/ou technical)
 
 ## Checklist:
 

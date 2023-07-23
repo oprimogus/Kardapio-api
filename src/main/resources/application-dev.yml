@@ -1,26 +1,16 @@
-server:
-  port: 8081
 spring:
   datasource:
-    url: jdbc:postgresql://localhost:5432/kardapio?createDatabaseIfNotExist=true&serverTimeZone=UTC
+    url: jdbc:postgresql://localhost:5432/kardapio
     username: kardapio
     password: kardapio
-    hikari:
-      maximum-pool-size: 10
-      minimum-idle: 10
-      idle-timeout: 10000
   jpa:
-    #    generate-ddl: true
-    #    hibernate:
-    #      ddl-auto: create
-    properties:
-      javax:
-        persistence:
-          schema-generation:
-            scripts:
-    #              action: create
-    #              create-target: src/main/resources/ddl.sql
+    hibernate:
+      ddl-auto: create-drop
     show-sql: true
-    open-in-view: false
-  flyway:
-    locations: classpath:db/migration,classpath:db/testdata
+
+api:
+  configs:
+    security:
+      token:
+        secret: seu_valor_secreto_aqui
+

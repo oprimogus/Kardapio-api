@@ -7,6 +7,7 @@
 ![Banner](src/main/resources/assets/database-scheme.svg)
 - Criar front-end ou mobile primeiro? 
 - Definir UI/UX
+- **Adicionar Spring Security para armazenar senhas corretamente**
 
 ## Sobre o projeto
 - Consiste numa API para servir a aplicação Kardápio
