@@ -38,7 +38,6 @@ public class ApplicationControllerAdvice extends ResponseEntityExceptionHandler 
     public ResponseEntity<Object> handleUncaught(Exception ex, WebRequest request) {
         HttpStatus status = HttpStatus.INTERNAL_SERVER_ERROR;
 
-        ex.printStackTrace();
         ErrorDTO body = new ErrorDTO(getTime(), ex.getMessage(), MSG_ERRO_GENERICA_USUARIO_FINAL);
 
         return handleExceptionInternal(ex, body, new HttpHeaders(), status, request);
