@@ -1,0 +1,33 @@
+spring:
+  datasource:
+    username: kardapio
+    password: kardapio
+    url: jdbc:postgresql://${api.configs.database.host}:${api.configs.database.port}}/${api.configs.database.database_name}
+  jpa:
+    hibernate:
+      ddl-auto: create-drop
+    show-sql: true
+  security:
+    oauth2:
+      client:
+        registration:
+          google:
+            client-id: ${GOOGLE_CLIENT_ID}}
+            client-secret: ${GOOGLE_CLIENT_SECRET}}
+api:
+  configs:
+    database:
+      host: localhost
+      port: 5432
+      database_name: kardapio
+    server:
+      port: 8080
+    security:
+      token:
+        secret: eusouumsegredo
+
+logging:
+  level:
+    org:
+      springframework:
+        security: DEBUG
