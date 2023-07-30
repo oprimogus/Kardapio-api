@@ -23,7 +23,7 @@ public class AuthenticationService implements UserDetailsService {
         if (userModel.isEmpty()) throw new UsernameNotFoundException("User not found");
         return new User(
                 userModel.get().getUsername(),
-                userModel.get().getPassword(),
+                "",
                 true,
                 true,
                 true,

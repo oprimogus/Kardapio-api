@@ -7,10 +7,23 @@ spring:
     hibernate:
       ddl-auto: create-drop
     show-sql: true
-
+  security:
+    oauth2:
+      client:
+        registration:
+          google:
+            client-id: ${GOOGLE_CLIENT_ID}}
+            client-secret: ${GOOGLE_CLIENT_SECRET}}
+server:
+  port: 8080
 api:
   configs:
     security:
       token:
-        secret: seu_valor_secreto_aqui
+        secret: ${JWT_SECRET}
 
+logging:
+  level:
+    org:
+      springframework:
+        security: DEBUG
