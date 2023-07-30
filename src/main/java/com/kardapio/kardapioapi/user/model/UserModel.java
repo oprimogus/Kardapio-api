@@ -29,6 +29,11 @@ public class UserModel implements UserDetails {
         this.role = role;
     }
 
+    public UserModel(String email, UserRole role) {
+        this.email = email;
+        this.role = role;
+    }
+
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private UUID id;
@@ -38,9 +43,7 @@ public class UserModel implements UserDetails {
     @Column(nullable = false, unique = true, length = 50)
     private String email;
 
-    @NotEmpty
-    @NotNull
-    @Column(nullable = false)
+    @Column()
     private String password;
 
     @Convert(converter = UserRoleConverter.class)
@@ -78,7 +81,7 @@ public class UserModel implements UserDetails {
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return List.of(new SimpleGrantedAuthority(this.getRole().name()));
+        return List.of(new SimpleGrantedAuthority(this.getRole().getValue()));
     }
 
     public String getPassword() {

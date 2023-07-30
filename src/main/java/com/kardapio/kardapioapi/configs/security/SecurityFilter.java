@@ -33,7 +33,7 @@ public class SecurityFilter extends OncePerRequestFilter {
             @NonNull HttpServletResponse response,
             @NonNull FilterChain filterChain) throws ServletException, IOException {
         var token = this.recoverToken(request);
-        if (token != null) {
+        if (token != null && tokenService.isValidToken(token)) {
             var login = tokenService.validateToken(token);
             Optional<UserModel> userModel = userRepository.findByEmail(login);
             if (userModel.isPresent()) {

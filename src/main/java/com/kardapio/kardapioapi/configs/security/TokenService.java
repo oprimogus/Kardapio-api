@@ -1,6 +1,7 @@
 package com.kardapio.kardapioapi.configs.security;
 
 import com.auth0.jwt.JWT;
+import com.auth0.jwt.JWTVerifier;
 import com.auth0.jwt.algorithms.Algorithm;
 import com.auth0.jwt.exceptions.JWTCreationException;
 import com.auth0.jwt.exceptions.JWTVerificationException;
@@ -51,6 +52,19 @@ public class TokenService {
             return "";
         }
     }
+
+    public Boolean isValidToken (String token) {
+        try {
+            Algorithm algorithm =  Algorithm.HMAC256(secret);
+            JWTVerifier verifier = JWT.require(algorithm)
+                    .build(); //Reusable verifier instance
+            verifier.verify(token);
+            return true;
+        } catch (JWTVerificationException exception) {
+            return false;
+        }
+    }
+
     private Instant createExpirationDate() {
         return LocalDateTime.now().plusHours(2).toInstant(ZoneOffset.of("-03:00"));
 

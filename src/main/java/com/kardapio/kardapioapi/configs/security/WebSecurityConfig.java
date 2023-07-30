@@ -20,13 +20,17 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 public class WebSecurityConfig {
 
     private final SecurityFilter securityFilter;
+    private final AuthenticationSuccessHandler authenticationSuccessHandler;
 
-    public WebSecurityConfig (SecurityFilter securityFilter) {
+    public WebSecurityConfig (SecurityFilter securityFilter,
+                              AuthenticationSuccessHandler authenticationSuccessHandler) {
         this.securityFilter = securityFilter;
+        this.authenticationSuccessHandler = authenticationSuccessHandler;
     }
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
+
         return http
                 .csrf(AbstractHttpConfigurer::disable)
                 .exceptionHandling(e -> e
@@ -34,8 +38,10 @@ public class WebSecurityConfig {
                         .accessDeniedHandler(new BearerTokenAccessDeniedHandler()))
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(authorize -> authorize
-                        .requestMatchers("/v1/auth/**").permitAll()
+                        .requestMatchers("/login/**", "/oauth/**", "/").permitAll()
                         .anyRequest().authenticated())
+                .oauth2Login(oauth2 -> oauth2
+                        .successHandler(authenticationSuccessHandler))
                 .addFilterBefore(securityFilter, UsernamePasswordAuthenticationFilter.class)
                 .build();
     }
