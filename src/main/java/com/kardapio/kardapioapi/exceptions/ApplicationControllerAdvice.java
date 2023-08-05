@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.exc.InvalidFormatException;
 import com.fasterxml.jackson.databind.exc.PropertyBindingException;
 import com.kardapio.kardapioapi.exceptions.dto.ErrorDTO;
+import jakarta.validation.ConstraintViolationException;
 import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.beans.TypeMismatchException;
@@ -37,6 +38,15 @@ public class ApplicationControllerAdvice extends ResponseEntityExceptionHandler 
     @ExceptionHandler(Exception.class)
     public ResponseEntity<Object> handleUncaught(Exception ex, WebRequest request) {
         HttpStatus status = HttpStatus.INTERNAL_SERVER_ERROR;
+
+        ErrorDTO body = new ErrorDTO(getTime(), ex.getMessage(), MSG_ERRO_GENERICA_USUARIO_FINAL);
+
+        return handleExceptionInternal(ex, body, new HttpHeaders(), status, request);
+    }
+
+    @ExceptionHandler(ConstraintViolationException.class)
+    public ResponseEntity<Object> handleMethodArgumentNotValid(Exception ex, WebRequest request) {
+        HttpStatus status = HttpStatus.BAD_REQUEST;
 
         ErrorDTO body = new ErrorDTO(getTime(), ex.getMessage(), MSG_ERRO_GENERICA_USUARIO_FINAL);
 

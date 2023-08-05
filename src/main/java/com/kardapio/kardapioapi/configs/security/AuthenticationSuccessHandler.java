@@ -1,15 +1,13 @@
 package com.kardapio.kardapioapi.configs.security;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.kardapio.kardapioapi.user.enums.UserRole;
-import com.kardapio.kardapioapi.user.model.UserModel;
-import com.kardapio.kardapioapi.user.repository.UserRepository;
-import com.kardapio.kardapioapi.user.services.AuthenticationService;
+import com.kardapio.kardapioapi.domain.user.enums.UserRole;
+import com.kardapio.kardapioapi.domain.user.model.UserModel;
+import com.kardapio.kardapioapi.domain.user.services.UserService;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.oauth2.client.authentication.OAuth2AuthenticationToken;
 import org.springframework.security.web.authentication.SimpleUrlAuthenticationSuccessHandler;
 import org.springframework.stereotype.Component;
@@ -17,21 +15,17 @@ import org.springframework.stereotype.Component;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Optional;
 
 @Component
 public class AuthenticationSuccessHandler extends SimpleUrlAuthenticationSuccessHandler {
 
     private final TokenService tokenService;
-    private final AuthenticationService authenticationService;
-    private final UserRepository userRepository;
+    private final UserService userService;
 
     public AuthenticationSuccessHandler(TokenService tokenService,
-                                        AuthenticationService authenticationService,
-                                        UserRepository userRepository) {
+                                        UserService userService) {
         this.tokenService = tokenService;
-        this.authenticationService = authenticationService;
-        this.userRepository = userRepository;
+        this.userService = userService;
     }
 
     @Override
@@ -39,18 +33,12 @@ public class AuthenticationSuccessHandler extends SimpleUrlAuthenticationSuccess
                                         Authentication authentication) throws IOException {
         if (authentication instanceof OAuth2AuthenticationToken oauthToken) {
             String email = oauthToken.getPrincipal().getAttribute("email");
-            Optional<UserModel> userModel = this.userRepository.findByEmail(email);
-            if (userModel.isEmpty()) {
-                var newUser = new UserModel(email, UserRole.ROLE_CONSUMER);
-                userRepository.save(newUser);
-            }
-            UserDetails userDetails = authenticationService.loadUserByUsername(email);
-            String token = tokenService.createToken(userDetails);
+            UserModel userModel = this.userService.findOrCreateByEmail(email, UserRole.ROLE_CONSUMER);
+            String token = tokenService.createToken(userModel);
             response.setHeader("Authorization", "Bearer " + token);
-
             Map<String, String> responseData = new HashMap<>();
             responseData.put("token", token);
-            String role = userDetails.getAuthorities().stream()
+            String role = userModel.getAuthorities().stream()
                     .map(GrantedAuthority::getAuthority)
                     .findFirst()
                     .orElse(null);

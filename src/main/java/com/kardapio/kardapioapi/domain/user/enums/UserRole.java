@@ -1,4 +1,4 @@
-package com.kardapio.kardapioapi.user.enums;
+package com.kardapio.kardapioapi.domain.user.enums;
 
 import org.springframework.security.core.GrantedAuthority;
 
@@ -11,7 +11,7 @@ public enum UserRole implements GrantedAuthority {
 
     private String value;
 
-    private UserRole(String value) {
+    UserRole(String value) {
         this.value = value;
     }
 

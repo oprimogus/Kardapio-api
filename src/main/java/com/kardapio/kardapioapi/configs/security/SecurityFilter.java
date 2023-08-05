@@ -1,7 +1,7 @@
 package com.kardapio.kardapioapi.configs.security;
 
-import com.kardapio.kardapioapi.user.model.UserModel;
-import com.kardapio.kardapioapi.user.repository.UserRepository;
+import com.kardapio.kardapioapi.domain.user.model.UserModel;
+import com.kardapio.kardapioapi.domain.user.repository.UserRepository;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;

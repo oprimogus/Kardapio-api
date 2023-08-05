@@ -5,9 +5,9 @@ import com.auth0.jwt.JWTVerifier;
 import com.auth0.jwt.algorithms.Algorithm;
 import com.auth0.jwt.exceptions.JWTCreationException;
 import com.auth0.jwt.exceptions.JWTVerificationException;
+import com.kardapio.kardapioapi.domain.user.model.UserModel;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
 import java.time.Instant;
@@ -21,17 +21,18 @@ public class TokenService {
     @Value("${api.configs.security.token.secret}")
     private String secret;
 
-    public String createToken(UserDetails userDetails) {
+    public String createToken(UserModel user) {
         try {
             Algorithm algorithm =  Algorithm.HMAC256(secret);
-            List<String> roles = userDetails.getAuthorities().stream()
+            List<String> roles = user.getAuthorities().stream()
                     .map(GrantedAuthority::getAuthority)
                     .toList();
 
             String[] rolesArray = roles.toArray(new String[0]);
             return JWT.create()
                     .withIssuer("Kardapio-api")
-                    .withSubject(userDetails.getUsername())
+                    .withSubject(user.getUsername())
+                    .withClaim("id", user.getId().toString())
                     .withArrayClaim("roles", rolesArray)
                     .withExpiresAt(createExpirationDate())
                     .sign(algorithm);
@@ -57,7 +58,7 @@ public class TokenService {
         try {
             Algorithm algorithm =  Algorithm.HMAC256(secret);
             JWTVerifier verifier = JWT.require(algorithm)
-                    .build(); //Reusable verifier instance
+                    .build();
             verifier.verify(token);
             return true;
         } catch (JWTVerificationException exception) {

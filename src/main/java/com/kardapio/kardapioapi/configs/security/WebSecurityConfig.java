@@ -39,7 +39,8 @@ public class WebSecurityConfig {
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(authorize -> authorize
                         .requestMatchers("/login/**", "/oauth/**", "/").permitAll()
-                        .anyRequest().authenticated())
+//                        .anyRequest().authenticated())
+                        .anyRequest().permitAll())
                 .oauth2Login(oauth2 -> oauth2
                         .successHandler(authenticationSuccessHandler))
                 .addFilterBefore(securityFilter, UsernamePasswordAuthenticationFilter.class)
