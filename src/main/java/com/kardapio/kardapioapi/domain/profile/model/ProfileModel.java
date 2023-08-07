@@ -30,14 +30,14 @@ public class ProfileModel {
     @Column(nullable = false, length = 75)
     private String lastName;
 
-    @NotEmpty
     @CPF
-    @Column(nullable = false, unique = true, length = 11)
+    @Column(unique = true, length = 11)
     private String cpf;
 
-    @NotEmpty
-    @Column(nullable = false, length = 14)
+    @Column(length = 14)
     private String phone;
+
+    private String picture;
 
     @Valid
     @OneToMany(mappedBy = "profileModel", cascade = CascadeType.ALL, orphanRemoval = true)
@@ -53,10 +53,6 @@ public class ProfileModel {
 
     public void setId(Long id) {
         this.id = id;
-    }
-
-    public UserModel getUserModel() {
-        return userModel;
     }
 
     public void setUserModel(UserModel userModel) {
@@ -95,19 +91,19 @@ public class ProfileModel {
         this.phone = phone;
     }
 
-    public LocalDateTime getUpdatedAt() {
-        return updatedAt;
-    }
-
-    public void setUpdatedAt(LocalDateTime updatedAt) {
-        this.updatedAt = updatedAt;
-    }
-
     public Set<AddressModel> getAddress() {
         return address;
     }
 
     public void setAddress(Set<AddressModel> address) {
         this.address = address;
+    }
+
+    public String getPicture() {
+        return picture;
+    }
+
+    public void setPicture(String picture) {
+        this.picture = picture;
     }
 }

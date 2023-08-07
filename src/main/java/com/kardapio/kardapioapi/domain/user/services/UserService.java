@@ -1,5 +1,6 @@
 package com.kardapio.kardapioapi.domain.user.services;
 
+import com.kardapio.kardapioapi.domain.user.enums.AccountProvider;
 import com.kardapio.kardapioapi.domain.user.enums.UserRole;
 import com.kardapio.kardapioapi.domain.user.model.UserModel;
 import com.kardapio.kardapioapi.domain.user.repository.UserRepository;
@@ -20,6 +21,7 @@ public class UserService implements UserDetailsService {
 
     private final UserRepository userRepository;
 
+
     public UserService(UserRepository userRepository) {
         this.userRepository = userRepository;
     }
@@ -39,11 +41,12 @@ public class UserService implements UserDetailsService {
     }
 
     @Transactional
-    public UserModel findOrCreateByEmail(String email, UserRole role) {
+    public UserModel findOrCreateByEmail(String email, UserRole role, AccountProvider accountProvider) {
         Optional<UserModel> userModelOptional = userRepository.findByEmail(email);
         if (userModelOptional.isEmpty()) {
-            UserModel newUser = new UserModel(email, role);
+            UserModel newUser = new UserModel(email, role, accountProvider);
             userModelOptional = Optional.of(userRepository.save(newUser));
+            userRepository.save(newUser);
         }
         return userModelOptional.get();
     }

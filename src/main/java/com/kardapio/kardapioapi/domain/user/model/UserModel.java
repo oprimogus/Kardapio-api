@@ -1,7 +1,9 @@
 package com.kardapio.kardapioapi.domain.user.model;
 
 import com.kardapio.kardapioapi.domain.profile.model.ProfileModel;
+import com.kardapio.kardapioapi.domain.user.enums.AccountProvider;
 import com.kardapio.kardapioapi.domain.user.enums.UserRole;
+import com.kardapio.kardapioapi.domain.user.enums.converter.AccountProviderConverter;
 import com.kardapio.kardapioapi.domain.user.enums.converter.UserRoleConverter;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
@@ -20,13 +22,13 @@ import java.util.UUID;
 
 @Entity(name = "_user")
 public class UserModel implements UserDetails {
-
     public UserModel() {
     }
 
-    public UserModel(String email, UserRole role) {
+    public UserModel(String email, UserRole role, AccountProvider accountProvider) {
         this.email = email;
         this.role = role;
+        this.accountProvider = accountProvider;
     }
 
     @Id
@@ -49,6 +51,11 @@ public class UserModel implements UserDetails {
     @NotNull
     @Column(length = 15, nullable = false)
     private UserRole role;
+
+    @Convert(converter = AccountProviderConverter.class)
+    @NotNull
+    @Column(length = 15, nullable = false)
+    private AccountProvider accountProvider;
 
     @Column(nullable = false, columnDefinition = "timestamp")
     @CreationTimestamp
@@ -76,6 +83,10 @@ public class UserModel implements UserDetails {
 
     public void setEmail(String email) {
         this.email = email;
+    }
+
+    public AccountProvider getAccountProvider() {
+        return accountProvider;
     }
 
     @Override
@@ -114,10 +125,6 @@ public class UserModel implements UserDetails {
 
     public void setPassword(String password) {
         this.password = password;
-    }
-
-    public void setRole(UserRole role) {
-        this.role = role;
     }
 
     public ProfileModel getProfileModel() {

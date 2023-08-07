@@ -33,6 +33,7 @@ public class ProfileMapper {
         profileModel.setLastName(profileDTO.lastName());
         profileModel.setPhone(profileDTO.phone());
         profileModel.setCpf(profileDTO.cpf());
+        profileModel.setPicture(profileDTO.picture());
         Set<AddressModel> address = null;
         if (profileDTO.address() != null) {
             address = profileDTO.address().stream()
@@ -67,6 +68,7 @@ public class ProfileMapper {
                 profileModel.getLastName(),
                 profileModel.getCpf(),
                 profileModel.getPhone(),
+                profileModel.getPicture(),
                 addressDTOList);
     }
 }
