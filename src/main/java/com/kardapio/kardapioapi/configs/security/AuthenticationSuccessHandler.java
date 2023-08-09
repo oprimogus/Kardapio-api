@@ -36,7 +36,7 @@ public class AuthenticationSuccessHandler extends SimpleUrlAuthenticationSuccess
             var iss = auth.getAttribute("iss");
             String email = auth.getAttribute("email");
             AccountProvider accountProvider = null;
-            if (iss != null && iss.equals("https://accounts.google.com")) {
+            if (iss != null && iss.toString().equals("https://accounts.google.com")) {
                 accountProvider = AccountProvider.GOOGLE_ACCOUNT;
             }
             UserModel userModel = this.userService.findOrCreateByEmail(email, UserRole.ROLE_CONSUMER, accountProvider);

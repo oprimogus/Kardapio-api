@@ -5,6 +5,7 @@ import com.kardapio.kardapioapi.domain.user.model.UserModel;
 import jakarta.persistence.*;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.Pattern;
 import org.hibernate.annotations.UpdateTimestamp;
 import org.hibernate.validator.constraints.br.CPF;
 
@@ -27,16 +28,20 @@ public class ProfileModel {
     private String name;
 
     @NotEmpty
-    @Column(nullable = false, length = 75)
+    @Column(nullable = false, length = 45)
     private String lastName;
 
     @CPF
     @Column(unique = true, length = 11)
     private String cpf;
 
+    @NotEmpty
+    @Pattern(regexp = "^\\+55\\d{11}$", message = "Número de telefone inválido.")
     @Column(length = 14)
     private String phone;
 
+    @Pattern(regexp = "^(https?:\\/\\/)?([\\da-z\\.-]+)\\.([a-z\\.]{2,6})([\\/\\w \\.-]*)*\\/?$",
+            message = "URL inválida.")
     private String picture;
 
     @Valid

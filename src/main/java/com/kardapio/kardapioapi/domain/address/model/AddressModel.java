@@ -3,7 +3,7 @@ package com.kardapio.kardapioapi.domain.address.model;
 import com.kardapio.kardapioapi.domain.profile.model.ProfileModel;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotEmpty;
-import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Pattern;
 
 @Entity(name = "address")
 public class AddressModel {
@@ -13,23 +13,28 @@ public class AddressModel {
     private Long id;
 
     @NotEmpty
-    @NotNull
     @Column(nullable = false, length = 60)
     private String street;
 
     @NotEmpty
-    @NotNull
-    @Column(nullable = false, length = 20)
+    @Pattern(regexp = "^(S/N|\\d{1,5}[A-Za-z]?(-\\d{1,5}[A-Za-z]?)?)$", message = "Número residencial inválido")
+    @Column(nullable = false, length = 4)
+    private String number;
+
+    @Column(nullable = true, length = 15)
+    private String complement;
+
+    @NotEmpty
+    @Column(nullable = false, length = 30)
     private String city;
 
     @NotEmpty
-    @NotNull
     @Column(nullable = false, length = 20)
     private String state;
 
     @NotEmpty
-    @NotNull
-    @Column(nullable = false, length = 15)
+    @Pattern(regexp = "^\\d{5}-\\d{3}$", message = "CEP Inválido.")
+    @Column(nullable = false, length = 10)
     private String zip;
 
     @ManyToOne(fetch = FetchType.LAZY)
@@ -50,6 +55,22 @@ public class AddressModel {
 
     public void setStreet(String street) {
         this.street = street;
+    }
+
+    public String getNumber() {
+        return number;
+    }
+
+    public void setNumber(String number) {
+        this.number = number;
+    }
+
+    public String getComplement() {
+        return complement;
+    }
+
+    public void setComplement(String complement) {
+        this.complement = complement;
     }
 
     public String getCity() {

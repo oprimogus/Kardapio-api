@@ -2,7 +2,7 @@ package com.kardapio.kardapioapi.exceptions;
 
 public class RecordConflictException extends RuntimeException {
 
-    static final String DEFAULT_MESSAGE = "Registro ja existe";
+    static final String DEFAULT_MESSAGE = "Registro já existe.";
     public RecordConflictException() {
         super(DEFAULT_MESSAGE);
     }

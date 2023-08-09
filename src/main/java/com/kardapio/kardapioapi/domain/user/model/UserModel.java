@@ -8,7 +8,6 @@ import com.kardapio.kardapioapi.domain.user.enums.converter.UserRoleConverter;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotEmpty;
-import jakarta.validation.constraints.NotNull;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 import org.springframework.security.core.GrantedAuthority;
@@ -35,9 +34,9 @@ public class UserModel implements UserDetails {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private UUID id;
 
-    @OneToOne(cascade = CascadeType.ALL)
+    @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @JoinColumn(name = "profile_id", referencedColumnName = "id")
-    private ProfileModel profileModel;
+    private transient ProfileModel profileModel;
 
     @NotEmpty
     @Email
@@ -48,12 +47,10 @@ public class UserModel implements UserDetails {
     private String password;
 
     @Convert(converter = UserRoleConverter.class)
-    @NotNull
     @Column(length = 15, nullable = false)
     private UserRole role;
 
     @Convert(converter = AccountProviderConverter.class)
-    @NotNull
     @Column(length = 15, nullable = false)
     private AccountProvider accountProvider;
 

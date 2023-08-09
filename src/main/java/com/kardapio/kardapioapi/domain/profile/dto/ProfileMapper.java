@@ -6,6 +6,7 @@ import com.kardapio.kardapioapi.domain.profile.model.ProfileModel;
 import com.kardapio.kardapioapi.domain.user.model.UserModel;
 import com.kardapio.kardapioapi.domain.user.repository.UserRepository;
 import com.kardapio.kardapioapi.exceptions.RecordNotFoundException;
+import jakarta.validation.Valid;
 import org.springframework.stereotype.Component;
 
 import java.util.Optional;
@@ -22,7 +23,7 @@ public class ProfileMapper {
         this.userRepository = userRepository;
     }
 
-    public ProfileModel toModel (ProfileDTO profileDTO, UUID userId) {
+    public ProfileModel toModel (@Valid ProfileDTO profileDTO, UUID userId) {
         Optional<UserModel> userModel = this.userRepository.findById(userId);
         if (userModel.isEmpty()) {
             throw new RecordNotFoundException("User no exists");
@@ -40,6 +41,8 @@ public class ProfileMapper {
                     .map(addressDTO -> {
                         var addressModel = new AddressModel();
                         addressModel.setStreet(addressDTO.street());
+                        addressModel.setNumber(addressDTO.number());
+                        addressModel.setComplement(addressDTO.complement());
                         addressModel.setCity(addressDTO.city());
                         addressModel.setState(addressDTO.state());
                         addressModel.setZip(addressDTO.zip());
@@ -52,7 +55,7 @@ public class ProfileMapper {
         return profileModel;
     }
 
-    public ProfileDTO toDTO(ProfileModel profileModel) {
+    public ProfileDTO toDTO(@Valid ProfileModel profileModel) {
         if (profileModel == null) {
             return null;
         }
@@ -60,8 +63,13 @@ public class ProfileMapper {
         if (profileModel.getAddress() != null) {
             addressDTOList = profileModel.getAddress()
                     .stream()
-                    .map(addressModel -> new AddressDTO(addressModel.getStreet(),
-                            addressModel.getCity(), addressModel.getState(), addressModel.getZip()))
+                    .map(addressModel -> new AddressDTO(
+                            addressModel.getStreet(),
+                            addressModel.getNumber(),
+                            addressModel.getComplement(),
+                            addressModel.getCity(),
+                            addressModel.getState(),
+                            addressModel.getZip()))
                     .collect(Collectors.toSet());
         }
         return new ProfileDTO(profileModel.getName(),

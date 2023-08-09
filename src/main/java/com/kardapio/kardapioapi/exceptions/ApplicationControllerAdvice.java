@@ -4,7 +4,7 @@ import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.exc.InvalidFormatException;
 import com.fasterxml.jackson.databind.exc.PropertyBindingException;
 import com.kardapio.kardapioapi.exceptions.dto.ErrorDTO;
-import jakarta.validation.ConstraintViolationException;
+import com.kardapio.kardapioapi.exceptions.dto.FieldDTO;
 import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.beans.TypeMismatchException;
@@ -14,6 +14,8 @@ import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.lang.Nullable;
+import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.context.request.WebRequest;
@@ -35,22 +37,29 @@ public class ApplicationControllerAdvice extends ResponseEntityExceptionHandler 
             = "Ocorreu um erro interno inesperado no sistema. Tente novamente e se "
             + "o problema persistir, entre em contato com o administrador do sistema.";
 
+    public static final String MSG_ARGUMENT_NOT_VALID = "Os parâmetros informados são inválidos.";
+
     @ExceptionHandler(Exception.class)
     public ResponseEntity<Object> handleUncaught(Exception ex, WebRequest request) {
         HttpStatus status = HttpStatus.INTERNAL_SERVER_ERROR;
 
-        ErrorDTO body = new ErrorDTO(getTime(), ex.getMessage(), MSG_ERRO_GENERICA_USUARIO_FINAL);
+        ErrorDTO body = new ErrorDTO(getTime(), ex.getMessage(), MSG_ERRO_GENERICA_USUARIO_FINAL, null);
 
         return handleExceptionInternal(ex, body, new HttpHeaders(), status, request);
     }
+    @Override
+    protected ResponseEntity<Object> handleMethodArgumentNotValid(
+            MethodArgumentNotValidException ex, HttpHeaders headers, HttpStatusCode status, WebRequest request) {
 
-    @ExceptionHandler(ConstraintViolationException.class)
-    public ResponseEntity<Object> handleMethodArgumentNotValid(Exception ex, WebRequest request) {
-        HttpStatus status = HttpStatus.BAD_REQUEST;
+        BindingResult bindingResult = ex.getBindingResult();
 
-        ErrorDTO body = new ErrorDTO(getTime(), ex.getMessage(), MSG_ERRO_GENERICA_USUARIO_FINAL);
+        List<FieldDTO> fieldDTOS = bindingResult.getFieldErrors().stream()
+                .map(fieldError -> new FieldDTO(fieldError.getField(), fieldError.getDefaultMessage()))
+                .toList();
 
-        return handleExceptionInternal(ex, body, new HttpHeaders(), status, request);
+        ErrorDTO body = new ErrorDTO(getTime(), MSG_ARGUMENT_NOT_VALID, "", fieldDTOS);
+
+        return handleExceptionInternal(ex, body, headers, status, request);
     }
 
     protected ResponseEntity<Object> handleNoHandlerFoundException(
@@ -61,7 +70,7 @@ public class ApplicationControllerAdvice extends ResponseEntityExceptionHandler 
         String detail = String.format("O recurso %s, que você tentou acessar, é inexistente.",
                 ex.getRequestURL());
 
-        ErrorDTO body = new ErrorDTO(getTime(), ex.getMessage(), detail);
+        ErrorDTO body = new ErrorDTO(getTime(), ex.getMessage(), detail, null);
 
         return handleExceptionInternal(ex, body, headers, status, request);
     }
@@ -96,7 +105,7 @@ public class ApplicationControllerAdvice extends ResponseEntityExceptionHandler 
                 ex.getName(), ex.getValue(), requiredTypeName);
 
 
-        ErrorDTO body = new ErrorDTO(getTime(), ex.getMessage(), detail);
+        ErrorDTO body = new ErrorDTO(getTime(), ex.getMessage(), detail, null);
 
         return handleExceptionInternal(ex, body, headers, status, request);
     }
@@ -117,7 +126,7 @@ public class ApplicationControllerAdvice extends ResponseEntityExceptionHandler 
 
         String detail = "O corpo da requisição está inválido. Verifique erro de sintaxe.";
 
-        ErrorDTO body = new ErrorDTO(getTime(), ex.getMessage(), detail);
+        ErrorDTO body = new ErrorDTO(getTime(), ex.getMessage(), detail, null);
 
         return handleExceptionInternal(ex, body, headers, status, request);
     }
@@ -134,7 +143,7 @@ public class ApplicationControllerAdvice extends ResponseEntityExceptionHandler 
                 + "Corrija ou remova essa propriedade e tente novamente.", path);
 
 
-        ErrorDTO body = new ErrorDTO(getTime(), ex.getMessage(), detail);
+        ErrorDTO body = new ErrorDTO(getTime(), ex.getMessage(), detail, null);
 
         return handleExceptionInternal(ex, body, headers, status, request);
     }
@@ -148,7 +157,7 @@ public class ApplicationControllerAdvice extends ResponseEntityExceptionHandler 
                         + "que é de um tipo inválido. Corrija e informe um valor compatível com o tipo %s.",
                 path, ex.getValue(), ex.getTargetType().getSimpleName());
 
-        ErrorDTO body = new ErrorDTO(getTime(), ex.getMessage(), detail);
+        ErrorDTO body = new ErrorDTO(getTime(), ex.getMessage(), detail, null);
 
         return handleExceptionInternal(ex, body, headers, status, request);
     }
@@ -170,19 +179,25 @@ public class ApplicationControllerAdvice extends ResponseEntityExceptionHandler 
             @NotNull HttpHeaders headers,
             @NotNull HttpStatusCode statusCode,
             @NotNull WebRequest request) {
-        ErrorDTO myBody = new ErrorDTO(getTime(), ex.getMessage(), "");
+
+        ErrorDTO error = (ErrorDTO) body;
+        if (error != null) {
+            ErrorDTO myBody = new ErrorDTO(error.timestamp(), error.message(), error.details(), error.fields());
+            return super.handleExceptionInternal(ex, myBody, headers, statusCode, request);
+        }
+        ErrorDTO myBody = new ErrorDTO(getTime(), ex.getMessage(), "", null);
         return super.handleExceptionInternal(ex, myBody, headers, statusCode, request);
     }
 
     @ExceptionHandler(RecordNotFoundException.class)
     public ResponseEntity<ErrorDTO> handleNotFoundException(RecordNotFoundException ex) {
-        ErrorDTO error = new ErrorDTO(getTime(), ex.getMessage(), "");
+        ErrorDTO error = new ErrorDTO(getTime(), ex.getMessage(), "", null);
         return new ResponseEntity<>(error, HttpStatus.NOT_FOUND);
     }
 
     @ExceptionHandler(RecordConflictException.class)
     public ResponseEntity<ErrorDTO> handleConflictException(RecordConflictException ex) {
-        ErrorDTO error = new ErrorDTO(getTime(), ex.getMessage(), "");
+        ErrorDTO error = new ErrorDTO(getTime(), ex.getMessage(), "", null);
         return new ResponseEntity<>(error, HttpStatus.CONFLICT);
     }
 }

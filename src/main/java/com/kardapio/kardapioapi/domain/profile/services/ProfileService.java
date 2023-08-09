@@ -43,12 +43,12 @@ public class ProfileService {
     public ProfileDTO createProfile(@Valid ProfileDTO profileDTO, UserModel userModel) {
         Optional<ProfileModel> profile = Optional.ofNullable(userModel.getProfileModel());
         if (profile.isPresent()) {
-            throw new RecordConflictException("This user already has a profile.");
+            throw new RecordConflictException("Este usuário já possui um perfil.");
         }
         ProfileModel newProfile = profileMapper.toModel(profileDTO, userModel.getId());
         userModel.setProfileModel(newProfile);
-        this.userRepository.save(userModel);
         this.profileRepository.save(newProfile);
+        this.userRepository.save(userModel);
         return profileMapper.toDTO(newProfile);
     }
 

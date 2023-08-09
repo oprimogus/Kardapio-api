@@ -38,9 +38,8 @@ public class WebSecurityConfig {
                         .accessDeniedHandler(new BearerTokenAccessDeniedHandler()))
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(authorize -> authorize
-                        .requestMatchers("/login/**", "/oauth/**", "/").permitAll()
-//                        .anyRequest().authenticated())
-                        .anyRequest().permitAll())
+                        .requestMatchers( "/oauth2/**", "/").permitAll()
+                        .anyRequest().authenticated())
                 .oauth2Login(oauth2 -> oauth2
                         .successHandler(authenticationSuccessHandler))
                 .addFilterBefore(securityFilter, UsernamePasswordAuthenticationFilter.class)

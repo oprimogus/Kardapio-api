@@ -29,7 +29,7 @@ public class ProfileController {
     }
 
     @PostMapping("")
-    public ProfileDTO createProfile (@RequestBody @Valid ProfileDTO profile) {
+    public ProfileDTO createProfile (@Valid @RequestBody ProfileDTO profile) {
         UserModel auth = this.userService.getAuth();
         return this.profileService.createProfile(profile, auth);
     }
