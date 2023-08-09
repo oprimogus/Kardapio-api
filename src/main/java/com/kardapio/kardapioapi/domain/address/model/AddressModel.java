@@ -21,7 +21,7 @@ public class AddressModel {
     @Column(nullable = false, length = 4)
     private String number;
 
-    @Column(nullable = true, length = 15)
+    @Column(length = 15)
     private String complement;
 
     @NotEmpty
