@@ -1,6 +1,6 @@
-package com.kardapio.kardapioapi.user.enums.converter;
+package com.kardapio.kardapioapi.domain.user.enums.converter;
 
-import com.kardapio.kardapioapi.user.enums.UserRole;
+import com.kardapio.kardapioapi.domain.user.enums.UserRole;
 import jakarta.persistence.AttributeConverter;
 import jakarta.persistence.Converter;
 

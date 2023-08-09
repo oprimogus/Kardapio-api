@@ -5,7 +5,7 @@ spring:
     url: jdbc:postgresql://${api.configs.database.host}:${api.configs.database.port}}/${api.configs.database.database_name}
   jpa:
     hibernate:
-      ddl-auto: create-drop
+      ddl-auto: update
     show-sql: true
   security:
     oauth2:
@@ -20,8 +20,6 @@ api:
       host: ${DATABASE_HOST}
       port: ${DATABASE_PORT}
       database_name: ${DATABASE_NAME}
-    server:
-      port: 8080
     security:
       token:
         secret: ${JWT_SECRET}

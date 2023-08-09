@@ -1,10 +1,13 @@
-package com.kardapio.kardapioapi.user.model;
+package com.kardapio.kardapioapi.domain.user.model;
 
-import com.kardapio.kardapioapi.user.enums.UserRole;
-import com.kardapio.kardapioapi.user.enums.converter.UserRoleConverter;
+import com.kardapio.kardapioapi.domain.profile.model.ProfileModel;
+import com.kardapio.kardapioapi.domain.user.enums.AccountProvider;
+import com.kardapio.kardapioapi.domain.user.enums.UserRole;
+import com.kardapio.kardapioapi.domain.user.enums.converter.AccountProviderConverter;
+import com.kardapio.kardapioapi.domain.user.enums.converter.UserRoleConverter;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotEmpty;
-import jakarta.validation.constraints.NotNull;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 import org.springframework.security.core.GrantedAuthority;
@@ -16,30 +19,27 @@ import java.util.Collection;
 import java.util.List;
 import java.util.UUID;
 
-@Entity
-@Table(name = "_user")
+@Entity(name = "_user")
 public class UserModel implements UserDetails {
-
     public UserModel() {
     }
 
-    public UserModel(String email, String password, UserRole role) {
-        this.email = email;
-        this.password = password;
-        this.role = role;
-    }
-
-    public UserModel(String email, UserRole role) {
+    public UserModel(String email, UserRole role, AccountProvider accountProvider) {
         this.email = email;
         this.role = role;
+        this.accountProvider = accountProvider;
     }
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private UUID id;
 
+    @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @JoinColumn(name = "profile_id", referencedColumnName = "id")
+    private transient ProfileModel profileModel;
+
     @NotEmpty
-    @NotNull
+    @Email
     @Column(nullable = false, unique = true, length = 50)
     private String email;
 
@@ -47,9 +47,12 @@ public class UserModel implements UserDetails {
     private String password;
 
     @Convert(converter = UserRoleConverter.class)
-    @NotNull
     @Column(length = 15, nullable = false)
     private UserRole role;
+
+    @Convert(converter = AccountProviderConverter.class)
+    @Column(length = 15, nullable = false)
+    private AccountProvider accountProvider;
 
     @Column(nullable = false, columnDefinition = "timestamp")
     @CreationTimestamp
@@ -79,6 +82,10 @@ public class UserModel implements UserDetails {
         this.email = email;
     }
 
+    public AccountProvider getAccountProvider() {
+        return accountProvider;
+    }
+
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return List.of(new SimpleGrantedAuthority(this.getRole().getValue()));
@@ -90,7 +97,7 @@ public class UserModel implements UserDetails {
 
     @Override
     public String getUsername() {
-        return email;
+        return getEmail();
     }
 
     @Override
@@ -117,29 +124,11 @@ public class UserModel implements UserDetails {
         this.password = password;
     }
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-
-        UserModel userModel = (UserModel) o;
-
-        if (!id.equals(userModel.id)) return false;
-        if (!email.equals(userModel.email)) return false;
-        if (!password.equals(userModel.password)) return false;
-        if (role != userModel.role) return false;
-        if (!createdAt.equals(userModel.createdAt)) return false;
-        return updatedAt.equals(userModel.updatedAt);
+    public ProfileModel getProfileModel() {
+        return profileModel;
     }
 
-    @Override
-    public int hashCode() {
-        int result = id.hashCode();
-        result = 31 * result + email.hashCode();
-        result = 31 * result + password.hashCode();
-        result = 31 * result + role.hashCode();
-        result = 31 * result + createdAt.hashCode();
-        result = 31 * result + updatedAt.hashCode();
-        return result;
+    public void setProfileModel(ProfileModel profileModel) {
+        this.profileModel = profileModel;
     }
 }
