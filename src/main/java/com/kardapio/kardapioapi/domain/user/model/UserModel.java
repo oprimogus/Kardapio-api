@@ -21,6 +21,7 @@ import java.util.UUID;
 
 @Entity(name = "_user")
 public class UserModel implements UserDetails {
+
     public UserModel() {
     }
 
@@ -36,7 +37,7 @@ public class UserModel implements UserDetails {
 
     @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @JoinColumn(name = "profile_id", referencedColumnName = "id")
-    private transient ProfileModel profileModel;
+    private ProfileModel profileModel;
 
     @NotEmpty
     @Email

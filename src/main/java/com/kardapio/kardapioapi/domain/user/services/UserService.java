@@ -51,7 +51,7 @@ public class UserService implements UserDetailsService {
         return userModelOptional.get();
     }
 
-    public UserModel getAuth() {
+    public UserModel getUserByAuth() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         Object principal = authentication.getPrincipal();
         if (principal instanceof Optional<?> optionalPrincipal) {
