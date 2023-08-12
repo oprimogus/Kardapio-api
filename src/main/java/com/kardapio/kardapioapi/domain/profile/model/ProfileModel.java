@@ -45,7 +45,7 @@ public class ProfileModel {
     private String picture;
 
     @Valid
-    @OneToMany(mappedBy = "profileModel", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "profileModel", cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<AddressModel> address = new HashSet<>();
 
     @Column(nullable = false, columnDefinition = "timestamp")

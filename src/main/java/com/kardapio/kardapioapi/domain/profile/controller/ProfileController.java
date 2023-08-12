@@ -23,14 +23,14 @@ public class ProfileController {
     }
 
     @GetMapping("")
-    public ProfileModel findProfile () {
-        UserModel user = this.userService.getAuth();
-        return this.profileService.findProfile(user.getProfileModel().getId());
+    public ProfileModel findMe() {
+        Long id = this.userService.getUserByAuth().getProfileModel().getId();
+        return this.profileService.findProfile(id);
     }
 
     @PostMapping("")
     public ProfileDTO createProfile (@Valid @RequestBody ProfileDTO profile) {
-        UserModel auth = this.userService.getAuth();
+        UserModel auth = this.userService.getUserByAuth();
         return this.profileService.createProfile(profile, auth);
     }
 
