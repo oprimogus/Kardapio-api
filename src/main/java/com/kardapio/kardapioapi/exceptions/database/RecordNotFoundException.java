@@ -1,4 +1,4 @@
-package com.kardapio.kardapioapi.exceptions;
+package com.kardapio.kardapioapi.exceptions.database;
 
 
 public class RecordNotFoundException extends RuntimeException {

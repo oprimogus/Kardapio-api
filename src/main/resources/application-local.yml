@@ -6,10 +6,19 @@ spring:
   jpa:
     hibernate:
       ddl-auto: create-drop
+#      ddl-auto: update
     show-sql: true
     properties:
       hibernate:
         format_sql: true
+#      javax:
+#        persistence:
+#          schema-generation:
+#            scripts:
+#              action: create
+#              create-target: src/main/resources/ddl.sql
+#  flyway:
+#    locations: classpath:db/migration,classpath:db/testdata
   security:
     oauth2:
       client:
@@ -17,16 +26,6 @@ spring:
           google:
             client-id: 858555504557-h20bcel6tdpr1cjcgkauv23ielpq0kbn.apps.googleusercontent.com
             client-secret: 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
-api:
-  configs:
-    database:
-      host: localhost
-      port: 5432
-      database_name: kardapio
-    security:
-      token:
-        secret: eusouumsegredo
-
 logging:
   level:
     org:
@@ -37,3 +36,17 @@ logging:
           descriptor:
             sql:
               BasicBinder: TRACE
+
+api:
+  configs:
+    database:
+      host: localhost
+      port: 5432
+      database_name: kardapio
+    security:
+      token:
+        secret: eusouumsegredo
+
+apis:
+  viacep:
+    url: https://viacep.com.br/ws/

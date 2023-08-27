@@ -3,6 +3,8 @@ spring:
     username: ${DATABASE_USER}
     password: ${DATABASE_PASSWORD}
     url: jdbc:postgresql://${api.configs.database.host}:${api.configs.database.port}}/${api.configs.database.database_name}
+  flyway:
+    locations: classpath:db/migration,classpath:db/testdata
   jpa:
     hibernate:
       ddl-auto: update
@@ -14,6 +16,11 @@ spring:
           google:
             client-id: ${GOOGLE_CLIENT_ID}}
             client-secret: ${GOOGLE_CLIENT_SECRET}}
+logging:
+  level:
+    org:
+      springframework:
+        security: DEBUG
 api:
   configs:
     database:
@@ -24,8 +31,8 @@ api:
       token:
         secret: ${JWT_SECRET}
 
-logging:
-  level:
-    org:
-      springframework:
-        security: DEBUG
+apis:
+  viacep:
+    url: https://viacep.com.br/ws/
+
+

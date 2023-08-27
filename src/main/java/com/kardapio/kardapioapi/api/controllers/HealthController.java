@@ -1,4 +1,4 @@
-package com.kardapio.kardapioapi.api.controller;
+package com.kardapio.kardapioapi.api.controllers;
 
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.GetMapping;

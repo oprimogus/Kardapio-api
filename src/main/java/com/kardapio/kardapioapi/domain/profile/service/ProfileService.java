@@ -1,4 +1,4 @@
-package com.kardapio.kardapioapi.domain.profile.services;
+package com.kardapio.kardapioapi.domain.profile.service;
 
 import com.kardapio.kardapioapi.domain.profile.dto.ProfileDTO;
 import com.kardapio.kardapioapi.domain.profile.dto.ProfileMapper;
@@ -6,8 +6,8 @@ import com.kardapio.kardapioapi.domain.profile.model.ProfileModel;
 import com.kardapio.kardapioapi.domain.profile.repository.ProfileRepository;
 import com.kardapio.kardapioapi.domain.user.model.UserModel;
 import com.kardapio.kardapioapi.domain.user.repository.UserRepository;
-import com.kardapio.kardapioapi.exceptions.RecordConflictException;
-import com.kardapio.kardapioapi.exceptions.RecordNotFoundException;
+import com.kardapio.kardapioapi.exceptions.database.RecordConflictException;
+import com.kardapio.kardapioapi.exceptions.database.RecordNotFoundException;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
 import org.springframework.stereotype.Service;

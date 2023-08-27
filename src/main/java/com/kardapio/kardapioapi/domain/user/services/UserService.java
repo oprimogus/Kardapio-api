@@ -4,7 +4,7 @@ import com.kardapio.kardapioapi.domain.user.enums.AccountProvider;
 import com.kardapio.kardapioapi.domain.user.enums.UserRole;
 import com.kardapio.kardapioapi.domain.user.model.UserModel;
 import com.kardapio.kardapioapi.domain.user.repository.UserRepository;
-import com.kardapio.kardapioapi.exceptions.RecordNotFoundException;
+import com.kardapio.kardapioapi.exceptions.database.RecordNotFoundException;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.User;

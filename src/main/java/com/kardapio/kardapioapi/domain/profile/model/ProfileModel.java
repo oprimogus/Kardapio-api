@@ -17,11 +17,15 @@ import java.util.Set;
 public class ProfileModel {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @OneToOne(mappedBy = "profileModel")
     private UserModel userModel;
+
+    @Valid
+    @OneToMany(mappedBy = "profileModel", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
+    private Set<AddressModel> address = new HashSet<>();
 
     @NotEmpty
     @Column(nullable = false, length = 25)
@@ -43,10 +47,6 @@ public class ProfileModel {
     @Pattern(regexp = "^(https?:\\/\\/)?([\\da-z\\.-]+)\\.([a-z\\.]{2,6})([\\/\\w \\.-]*)*\\/?$",
             message = "URL inválida.")
     private String picture;
-
-    @Valid
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "profileModel", cascade = CascadeType.ALL, orphanRemoval = true)
-    private Set<AddressModel> address = new HashSet<>();
 
     @Column(nullable = false, columnDefinition = "timestamp")
     @UpdateTimestamp

@@ -1,8 +1,8 @@
-package com.kardapio.kardapioapi.domain.profile.controller;
+package com.kardapio.kardapioapi.api.controllers;
 
 import com.kardapio.kardapioapi.domain.profile.dto.ProfileDTO;
 import com.kardapio.kardapioapi.domain.profile.model.ProfileModel;
-import com.kardapio.kardapioapi.domain.profile.services.ProfileService;
+import com.kardapio.kardapioapi.domain.profile.service.ProfileService;
 import com.kardapio.kardapioapi.domain.user.model.UserModel;
 import com.kardapio.kardapioapi.domain.user.services.UserService;
 import jakarta.validation.Valid;

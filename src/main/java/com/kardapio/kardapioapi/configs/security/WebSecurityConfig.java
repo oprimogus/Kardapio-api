@@ -39,6 +39,7 @@ public class WebSecurityConfig {
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(authorize -> authorize
                         .requestMatchers( "/oauth2/**", "/").permitAll()
+                        .requestMatchers("/restaurants/**").permitAll()
                         .anyRequest().authenticated())
                 .oauth2Login(oauth2 -> oauth2
                         .successHandler(authenticationSuccessHandler))

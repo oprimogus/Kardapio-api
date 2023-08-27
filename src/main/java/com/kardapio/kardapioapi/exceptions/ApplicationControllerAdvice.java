@@ -3,6 +3,9 @@ package com.kardapio.kardapioapi.exceptions;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.exc.InvalidFormatException;
 import com.fasterxml.jackson.databind.exc.PropertyBindingException;
+import com.kardapio.kardapioapi.exceptions.apis.ViaCEPException;
+import com.kardapio.kardapioapi.exceptions.database.RecordConflictException;
+import com.kardapio.kardapioapi.exceptions.database.RecordNotFoundException;
 import com.kardapio.kardapioapi.exceptions.dto.ErrorDTO;
 import com.kardapio.kardapioapi.exceptions.dto.FieldDTO;
 import org.apache.commons.lang3.exception.ExceptionUtils;
@@ -199,5 +202,11 @@ public class ApplicationControllerAdvice extends ResponseEntityExceptionHandler 
     public ResponseEntity<ErrorDTO> handleConflictException(RecordConflictException ex) {
         ErrorDTO error = new ErrorDTO(getTime(), ex.getMessage(), "", null);
         return new ResponseEntity<>(error, HttpStatus.CONFLICT);
+    }
+
+    @ExceptionHandler(ViaCEPException.class)
+    public ResponseEntity<ErrorDTO> handleViaCEPException(ViaCEPException ex) {
+        ErrorDTO error = new ErrorDTO(getTime(), ex.getMessage(), "", null);
+        return new ResponseEntity<>(error, HttpStatus.BAD_REQUEST);
     }
 }
