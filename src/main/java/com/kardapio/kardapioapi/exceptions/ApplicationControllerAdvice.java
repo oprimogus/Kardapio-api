@@ -5,6 +5,8 @@ import com.fasterxml.jackson.databind.exc.InvalidFormatException;
 import com.fasterxml.jackson.databind.exc.PropertyBindingException;
 import com.kardapio.kardapioapi.exceptions.apis.ViaCEPException;
 import com.kardapio.kardapioapi.exceptions.database.RecordConflictException;
+import com.kardapio.kardapioapi.exceptions.database.RecordFailedException;
+import com.kardapio.kardapioapi.exceptions.database.RecordInvalidException;
 import com.kardapio.kardapioapi.exceptions.database.RecordNotFoundException;
 import com.kardapio.kardapioapi.exceptions.dto.ErrorDTO;
 import com.kardapio.kardapioapi.exceptions.dto.FieldDTO;
@@ -52,7 +54,10 @@ public class ApplicationControllerAdvice extends ResponseEntityExceptionHandler 
     }
     @Override
     protected ResponseEntity<Object> handleMethodArgumentNotValid(
-            MethodArgumentNotValidException ex, HttpHeaders headers, HttpStatusCode status, WebRequest request) {
+            MethodArgumentNotValidException ex,
+            @NotNull HttpHeaders headers,
+            @NotNull HttpStatusCode status,
+            @NotNull WebRequest request) {
 
         BindingResult bindingResult = ex.getBindingResult();
 
@@ -62,7 +67,7 @@ public class ApplicationControllerAdvice extends ResponseEntityExceptionHandler 
 
         ErrorDTO body = new ErrorDTO(getTime(), MSG_ARGUMENT_NOT_VALID, "", fieldDTOS);
 
-        return handleExceptionInternal(ex, body, headers, status, request);
+        return super.handleExceptionInternal(ex, body, headers, status, request);
     }
 
     protected ResponseEntity<Object> handleNoHandlerFoundException(
@@ -182,12 +187,6 @@ public class ApplicationControllerAdvice extends ResponseEntityExceptionHandler 
             @NotNull HttpHeaders headers,
             @NotNull HttpStatusCode statusCode,
             @NotNull WebRequest request) {
-
-        ErrorDTO error = (ErrorDTO) body;
-        if (error != null) {
-            ErrorDTO myBody = new ErrorDTO(error.timestamp(), error.message(), error.details(), error.fields());
-            return super.handleExceptionInternal(ex, myBody, headers, statusCode, request);
-        }
         ErrorDTO myBody = new ErrorDTO(getTime(), ex.getMessage(), "", null);
         return super.handleExceptionInternal(ex, myBody, headers, statusCode, request);
     }
@@ -196,6 +195,18 @@ public class ApplicationControllerAdvice extends ResponseEntityExceptionHandler 
     public ResponseEntity<ErrorDTO> handleNotFoundException(RecordNotFoundException ex) {
         ErrorDTO error = new ErrorDTO(getTime(), ex.getMessage(), "", null);
         return new ResponseEntity<>(error, HttpStatus.NOT_FOUND);
+    }
+
+    @ExceptionHandler(RecordFailedException.class)
+    public ResponseEntity<ErrorDTO> handleFailedException(RecordFailedException ex) {
+        ErrorDTO error = new ErrorDTO(getTime(), ex.getMessage(), "", null);
+        return new ResponseEntity<>(error, HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+
+    @ExceptionHandler(RecordInvalidException.class)
+    public ResponseEntity<ErrorDTO> handleInvalidException(RecordInvalidException ex) {
+        ErrorDTO error = new ErrorDTO(getTime(), ex.getMessage(), "", null);
+        return new ResponseEntity<>(error, HttpStatus.BAD_REQUEST);
     }
 
     @ExceptionHandler(RecordConflictException.class)

@@ -8,11 +8,10 @@ import com.kardapio.kardapioapi.domain.user.model.UserModel;
 import com.kardapio.kardapioapi.domain.user.repository.UserRepository;
 import com.kardapio.kardapioapi.exceptions.database.RecordNotFoundException;
 import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotNull;
 import org.springframework.stereotype.Component;
 
-import java.util.Optional;
-import java.util.Set;
-import java.util.UUID;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Component
@@ -21,6 +20,7 @@ public class ProfileMapper {
     private final UserRepository userRepository;
 
     private final AddressMapper addressMapper;
+
 
     public ProfileMapper(UserRepository userRepository,
                          AddressMapper addressMapper) {
@@ -34,7 +34,6 @@ public class ProfileMapper {
             throw new RecordNotFoundException("Usuário não existe");
         }
         var profileModel = new ProfileModel();
-        profileModel.setUserModel(userModel.get());
         profileModel.setName(profileDTO.name());
         profileModel.setLastName(profileDTO.lastName());
         profileModel.setPhone(profileDTO.phone());
@@ -49,18 +48,17 @@ public class ProfileMapper {
         return profileModel;
     }
 
-    public ProfileDTO toDTO(@Valid ProfileModel profileModel) {
-        if (profileModel == null) {
-            return null;
-        }
-        Set<AddressDTO> addressDTOList = null;
+    public ProfileDTO toDTO(@NotNull @Valid ProfileModel profileModel) {
+        Set<AddressDTO> addressDTOList = new HashSet<>();
         if (profileModel.getAddress() != null) {
-            addressDTOList = profileModel.getAddress()
+            Set<AddressDTO> addressDTOListTemporary = profileModel.getAddress()
                     .stream()
                     .map(addressMapper::toDTO)
                     .collect(Collectors.toSet());
+            addressDTOList.addAll(addressDTOListTemporary);
         }
-        return new ProfileDTO(profileModel.getName(),
+        return new ProfileDTO(
+                profileModel.getName(),
                 profileModel.getLastName(),
                 profileModel.getCpf(),
                 profileModel.getPhone(),
