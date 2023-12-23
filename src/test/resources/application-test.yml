@@ -6,20 +6,13 @@ spring:
     hikari:
       maximum-pool-size: 10
   jpa:
-#    hibernate:
-#      ddl-auto: create-drop
-    show-sql: true
+    hibernate:
+      ddl-auto: create-drop
     properties:
       hibernate:
         format_sql: true
-#      javax:
-#        persistence:
-#          schema-generation:
-#            scripts:
-#              action: create
-#              create-target: src/main/resources/ddl.sql
-  flyway:
-    locations: classpath:db/migration,classpath:db/testdata
+#  flyway:
+#    locations: classpath:db/migration
   security:
     oauth2:
       client:
@@ -43,7 +36,7 @@ api:
     database:
       host: localhost
       port: 5432
-      database_name: kardapio
+      database_name: kardapio-test
     security:
       token:
         secret: eusouumsegredo

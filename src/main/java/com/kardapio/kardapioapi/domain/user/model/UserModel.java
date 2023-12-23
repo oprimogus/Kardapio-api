@@ -17,9 +17,10 @@ import org.springframework.security.core.userdetails.UserDetails;
 import java.time.LocalDateTime;
 import java.util.Collection;
 import java.util.List;
+import java.util.Objects;
 import java.util.UUID;
 
-@Entity(name = "_user")
+@Entity(name = "users")
 public class UserModel implements UserDetails {
 
     public UserModel() {
@@ -36,7 +37,7 @@ public class UserModel implements UserDetails {
     private UUID id;
 
     @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-    @JoinColumn(name = "profile_id", referencedColumnName = "id")
+    @JoinColumn(name = "profile_id")
     private ProfileModel profileModel;
 
     @NotEmpty
@@ -131,5 +132,60 @@ public class UserModel implements UserDetails {
 
     public void setProfileModel(ProfileModel profileModel) {
         this.profileModel = profileModel;
+    }
+
+    public void setRole(UserRole role) {
+        this.role = role;
+    }
+
+    public void setAccountProvider(AccountProvider accountProvider) {
+        this.accountProvider = accountProvider;
+    }
+
+    public LocalDateTime getCreatedAt() {
+        return createdAt;
+    }
+
+    public void setCreatedAt(LocalDateTime createdAt) {
+        this.createdAt = createdAt;
+    }
+
+    public LocalDateTime getUpdatedAt() {
+        return updatedAt;
+    }
+
+    public void setUpdatedAt(LocalDateTime updatedAt) {
+        this.updatedAt = updatedAt;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        UserModel userModel = (UserModel) o;
+
+        if (!Objects.equals(id, userModel.id)) return false;
+        if (!Objects.equals(profileModel, userModel.profileModel))
+            return false;
+        if (!Objects.equals(email, userModel.email)) return false;
+        if (!Objects.equals(password, userModel.password)) return false;
+        if (role != userModel.role) return false;
+        if (accountProvider != userModel.accountProvider) return false;
+        if (!Objects.equals(createdAt, userModel.createdAt)) return false;
+        return Objects.equals(updatedAt, userModel.updatedAt);
+    }
+
+    @Override
+    public int hashCode() {
+        int result = id != null ? id.hashCode() : 0;
+        result = 31 * result + (profileModel != null ? profileModel.hashCode() : 0);
+        result = 31 * result + (email != null ? email.hashCode() : 0);
+        result = 31 * result + (password != null ? password.hashCode() : 0);
+        result = 31 * result + (role != null ? role.hashCode() : 0);
+        result = 31 * result + (accountProvider != null ? accountProvider.hashCode() : 0);
+        result = 31 * result + (createdAt != null ? createdAt.hashCode() : 0);
+        result = 31 * result + (updatedAt != null ? updatedAt.hashCode() : 0);
+        return result;
     }
 }

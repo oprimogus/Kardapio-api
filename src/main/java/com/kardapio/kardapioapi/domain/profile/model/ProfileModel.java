@@ -6,6 +6,7 @@ import jakarta.persistence.*;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.Pattern;
+import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 import org.hibernate.validator.constraints.br.CPF;
 
@@ -16,12 +17,20 @@ import java.util.Set;
 @Entity(name = "profile")
 public class ProfileModel {
 
+    public ProfileModel() {
+    }
+
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Valid
     @OneToOne(mappedBy = "profileModel")
     private UserModel userModel;
+
+    @Valid
+    @OneToMany(mappedBy = "profileModel", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
+    private Set<AddressModel> address = new HashSet<>();
 
     @NotEmpty
     @Column(nullable = false, length = 25)
@@ -44,13 +53,20 @@ public class ProfileModel {
             message = "URL inválida.")
     private String picture;
 
-    @Valid
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "profileModel", cascade = CascadeType.ALL, orphanRemoval = true)
-    private Set<AddressModel> address = new HashSet<>();
-
+    @Column(nullable = false, columnDefinition = "timestamp")
+    @CreationTimestamp
+    private LocalDateTime createdAt;
     @Column(nullable = false, columnDefinition = "timestamp")
     @UpdateTimestamp
     private LocalDateTime updatedAt;
+
+    public UserModel getUserModel() {
+        return userModel;
+    }
+
+    public void setUserModel(UserModel userModel) {
+        this.userModel = userModel;
+    }
 
     public Long getId() {
         return id;
@@ -58,10 +74,6 @@ public class ProfileModel {
 
     public void setId(Long id) {
         this.id = id;
-    }
-
-    public void setUserModel(UserModel userModel) {
-        this.userModel = userModel;
     }
 
     public String getName() {

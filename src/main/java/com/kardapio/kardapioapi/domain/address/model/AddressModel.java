@@ -1,6 +1,7 @@
 package com.kardapio.kardapioapi.domain.address.model;
 
 import com.kardapio.kardapioapi.domain.profile.model.ProfileModel;
+import com.kardapio.kardapioapi.domain.restaurant.model.RestaurantModel;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.Pattern;
@@ -11,6 +12,14 @@ public class AddressModel {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
+    @ManyToOne
+    @JoinColumn(name = "profile_id")
+    private ProfileModel profileModel;
+
+    @OneToOne(mappedBy = "addressModel")
+    @JoinColumn(name = "restaurant_id")
+    private RestaurantModel restaurantModel;
 
     @NotEmpty
     @Column(nullable = false, length = 60)
@@ -25,6 +34,10 @@ public class AddressModel {
     private String complement;
 
     @NotEmpty
+    @Column(nullable = false, length = 45)
+    private String district;
+
+    @NotEmpty
     @Column(nullable = false, length = 30)
     private String city;
 
@@ -36,10 +49,6 @@ public class AddressModel {
     @Pattern(regexp = "^\\d{5}-\\d{3}$", message = "CEP Inválido.")
     @Column(nullable = false, length = 10)
     private String zip;
-
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "profile_id", nullable = false)
-    private ProfileModel profileModel;
 
     public Long getId() {
         return id;
@@ -73,6 +82,14 @@ public class AddressModel {
         this.complement = complement;
     }
 
+    public String getDistrict() {
+        return district;
+    }
+
+    public void setDistrict(String district) {
+        this.district = district;
+    }
+
     public String getCity() {
         return city;
     }
@@ -97,7 +114,19 @@ public class AddressModel {
         this.zip = zip;
     }
 
-    public void setProfile(ProfileModel profile) {
-        this.profileModel = profile;
+    public ProfileModel getProfileModel() {
+        return profileModel;
+    }
+
+    public void setProfileModel(ProfileModel profileModel) {
+        this.profileModel = profileModel;
+    }
+
+    public RestaurantModel getRestaurantModel() {
+        return restaurantModel;
+    }
+
+    public void setRestaurantModel(RestaurantModel restaurantModel) {
+        this.restaurantModel = restaurantModel;
     }
 }

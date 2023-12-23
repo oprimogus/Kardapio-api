@@ -14,6 +14,9 @@ public record AddressDTO(
         @Size(max = 15)
         String complement,
         @NotEmpty
+        @Size(max = 45)
+        String district,
+        @NotEmpty
         @Size(max = 30)
         String city,
         @NotEmpty
